@@ -1,0 +1,41 @@
+Universal Diagnostic Data Collector (getlogs) Changelog v1.4.0
+
+v1.1.0 Beta
+-----------
+General commandline functionality. 
+
+v1.2.2 Beta
+-----------
+Redesigned '--show' functionality to dynamically generate based on key file.
+Reformatted '--show' output to columns.
+Added bash script wrapper with basic menu system.
+Misc bug fixes.
+
+v1.3.0 Beta
+-----------
+Added option to list data to be gathered.
+Added option to view errors if any occurred.
+Misc bug fixes.
+
+v1.3.1 RC 1
+-----------
+Minor cosmetic changes.
+Fixed README and .dat files.
+
+v1.3.2 Beta
+-----------
+Minor cosmetic changes.
+
+v1.3.3 Stable
+-------------
+Misc bug fixes.
+Minor cosmetic changes.
+
+v1.4.0 Beta
+-----------
+Added functionality to designate data that will always be gathered.
+Moved filter.cfg to always gathered.
+Added items suggested by Philip Guenther <pguenther@proofpoint.com> to always gathered.
+Added various items to data file.
+Misc bug fixes.
+Minor cosmetic changes.
