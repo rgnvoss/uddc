@@ -1,0 +1,395 @@
+#!/usr/bin/env python2
+
+## Universal Diagnostic Data Collector (getlogs)
+## Written by Rob Voss
+
+# Import required libraries
+from time import strftime as now
+from getopt import getopt as options
+from getopt import GetoptError as opterr
+from subprocess import Popen as subopen
+from subprocess import PIPE as subpipe
+from urllib2 import urlopen as openurl
+from glob import glob as dirlist
+from os import makedirs as mkdir
+from os.path import exists as isexist
+from sys import exit as isfail
+from sys import argv as sysarg
+from sys import stdout as sysout
+from tarfile import open as mktar
+from shutil import rmtree as cleanup
+from pydoc import pager as paging
+from math import ceil as roundup
+
+# Global constants
+LNAME = "Universal Diagnostic Data Collector"
+SNAME = "getlogs"
+VERSION = "1.4.0"
+BUILD = "220104.01"
+SUFFIX = "Beta"
+PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
+MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
+RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"
+DATA = "/opt/proofpoint/getlogs/getlogs.dat"
+FORBIDDEN = ['kill ', 'killall', 'pkill ', 'reboot', 'shutdown', 'rm ', 'rmdir ', 'chmod ', 'chown ', 'mv ', 'ln ', 'su ', 'sudo ', 'scp ', 'sftp ', 'ssh ', 'vi ', 'vim ', 'nano ']
+
+# Global variables
+timestamp = now("%Y%m%d%H%M%S%z")
+datlines = []
+urllines = []
+cmdlines = []
+loglines = []
+cfglines = []
+vout = PNAME + "\r\n"
+helpout = PNAME + """
+
+Usage: getlogs <OPTIONS>
+
+Collect diagnostic data.
+
+Example: getlogs --get admin --output admin.tgz
+
+Miscellaneous Options:
+  -h, --help                Display this help text
+  -v, --version             Display version information
+  -s, --show                Display valid keywords
+
+File Options:
+  -k, --keyfile <file>      Load keyword data from <file>. Default is
+                            /opt/proofpoint/getlogs/getlogs.dat
+  -p, --path <path>         Save output in <path>. Default output
+                            path is /opt/proofpoint/getlogs
+  -o, --output <file>       Package data in <file>. File extension
+                            should be either tgz or tar.gz or there
+                            may be difficulty unpacking it. Default is
+                            getlogs_<HOST>_<KEY>_<TIME>.tgz
+  -t, --temp <path>         Use <path> as temp directory. Default is
+                            /opt/proofpoint/tmp
+
+Data Collection Options:
+  --test                    Test mode. Displays a list of files that
+                            would be collected. Does not actually create
+                            an output file.
+  -g, --get <keyword>       Collect diagnostic data for <keyword>. The
+                            keyword should represent what type of issue
+                            you need diagnostic data for, such as filter,
+                            sendmail, admin, fr, hft, alerts, av, etc.
+                            Default keyword is always
+"""
+
+# Help page
+def help_out():
+    paging(helpout)
+    isfail(2)
+
+
+# Version info
+def version_out():
+    print(vout)
+    isfail(2)
+
+
+# Version info
+def menu_version():
+    print(MVER)
+    isfail(2)
+
+
+# Show valid keywords
+def show_out(keypath):
+    show=(PNAME + "\r\n\r\nValid Keywords:\r\n")
+    split2=[]
+    with open(keypath) as filedat:
+        for line in filedat.readlines():
+            if '#' not in line:
+                split1 = line.split('::')[0].split(',')
+                for splitline in split1:
+                    if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
+                        split2.append(splitline)
+
+    filedat.close()
+    split3 = (sorted(list(set(split2))))
+    count = 0
+    for key in split3:
+        if (count == 3):
+            show = (show + key)
+        else:
+            show = (show + '{:<20}'.format(key))
+        count = count + 1
+        if (count == 4):
+            show = (show + "\r\n")
+            count=0
+    paging(show)
+    isfail(2)
+
+
+# List valid keywords
+def gimme_out(keypath):
+    show=''
+    split2=[]
+    with open(keypath) as filedat:
+        for line in filedat.readlines():
+            if '#' not in line:
+                split1 = line.split('::')[0].split(',')
+                for splitline in split1:
+                    if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
+                        split2.append(splitline)
+
+    filedat.close()
+    split3 = (sorted(list(set(split2))))
+    for key in split3:
+        print(key)
+
+    isfail(2)
+
+
+# Make sure file path exists, and create it if it doesn't
+def check_dir(filepath):
+    if not isexist(filepath):
+        mkdir(filepath)
+
+
+# Make sure keyword data file is there
+def check_keyfile(keypath):
+    if not isexist(keypath):
+        isfail( "Could not find keyword data file at %s\r\nExiting" % str(keypath) )
+
+
+# read in keyword data
+def read_keyfile(keyget, filein, menu):
+    isallowed = True
+    keyget = keyget + ","
+    with open(filein, 'r') as filedat:
+        filelines = filedat.readlines()
+        filedat.close()
+
+    for line in filelines:
+        if keyget in line or "always," in line:
+            if ':cmd:' in line:
+                isallowed = True
+                for badcmd in FORBIDDEN:
+                    if badcmd in line.split('::')[-1]:
+                        isallowed = False
+                        if not menu:
+                            print("Executing '" + line.split('::')[-1].replace("\n", "") + "' is forbidden. Skipped.")
+                        else:
+                            errorfile = open('/tmp/errors_out', 'a+')
+                            errorfile.write("Executing '" + line.split('::')[-1].replace("\n", "") + "' is forbidden. Skipped.\n")
+                            errorfile.close()
+                if isallowed:
+                    cmdlines.append(line.split('::')[-1].replace("\n", ""))
+            elif ':cfg:' in line:
+                cfglines.append(line.split('::')[-1].replace("\n", ""))
+            elif ':log:' in line:
+                loglines.append(line.split('::')[-1].replace("\n", ""))
+            elif ':url:' in line:
+                urllines.append(line.split('::')[-1].replace("\n", ""))
+
+
+# create tgz file
+def make_tar(keysin, tarout, testing, menu):
+    if not testing:
+        keylist = sorted(list(set(keysin)))
+        tar = mktar(tarout, "w|gz")
+        countlist = keylist
+        keylen = 0
+        keycount = 1
+        keystep = 0
+        keytemp = 1
+        for countdirs in countlist:
+            keylen = keylen + len(dirlist(countdirs))
+            keystep = 100.00 / keylen
+        keytemp = keytemp + keystep
+        keycount = keytemp
+        if menu:
+            print(0)
+            print(1)
+        else:
+            print("Gathering data. This may take some time.")
+        for line in keylist:
+            filelist=sorted(dirlist(line))
+            for files in filelist:
+                if menu:
+                    print(int(keycount))
+                    keytemp = keytemp + keystep
+                    keycount = keytemp
+                else:
+                    print("Progress: " + str(int(keycount)) + "%")
+                    keytemp = keytemp + keystep
+                    keycount = keytemp
+                try:
+                    tar.add(files)
+                except IOError:
+                    if not menu:
+                        print("You do not have permission to access '" + files + "'. Skipped.")
+                    else:
+                        errorfile = open('/tmp/errors_out', 'a+')
+                        errorfile.write("You do not have permission to access '" + files + "'. Skipped.\n")
+                        errorfile.close()
+                    pass
+
+
+# create list of files
+def make_filelist(keysin, tarout, testing, menu):
+    if testing:
+        keylist = sorted(list(set(keysin)))
+        for line in keylist:
+            filelist=sorted(dirlist(line))
+            for files in filelist:
+                if menu:
+                    filesfile = open('/tmp/files_out', 'a+')
+                    filesfile.write(files + "\n")
+                    filesfile.close()
+                else:
+                    print(files)
+    
+
+# run commands and add output to list of files to collect
+def add_cmds(cmdsin, tmpin, testing, menu):
+    cmddir = tmpin + "/cmds"
+    check_dir(cmddir)
+    for line in cmdsin:
+        cmdline = line
+        cmdname = cmdline.replace(" ", "_")
+        cmdout = cmddir + "/" + cmdname + "-" + timestamp
+        datlines.append(cmdout)
+        if testing:
+            if menu:
+                filesfile = open('/tmp/files_out', 'a+')
+                filesfile.write("output of '" + cmdline + "': '" + cmdout + "'\n")
+                filesfile.close()
+            else:
+                print("output of '" + cmdline + "' saves to '" + cmdout +"'")
+        else:
+            runcmd = subopen(line.split(), cwd=RUNFROM, stdout=subpipe)
+            output, error = runcmd.communicate()
+            cmdfile = open(cmdout, "w+")
+            for outline in output:
+                lineout = outline
+                cmdfile.write(lineout)
+            cmdfile.close()
+
+
+# add configs to list of files to collect
+def add_cfgs(cfgsin):
+    for line in cfgsin:
+        cfgfiles=sorted(dirlist(line))
+        for cfgline in cfgfiles:
+            datlines.append(cfgline)
+
+
+# add logs to list of files to collect
+def add_logs(logsin):
+    for line in logsin:
+        logfiles=sorted(dirlist(line))
+        for logline in logfiles:
+            datlines.append(line)
+
+# open urls and add output to list of files to collect
+def add_urls(urlsin, tmpin, testing, menu):
+    urldir = tmpin + "/urls"
+    check_dir(urldir)
+    for line in urlsin:
+        urlline = line
+        urlname = urlline.replace("http://", "")
+        urlname = urlname.replace("https://", "")
+        urlname = urlname.replace(".", "_")
+        urlname = urlname.replace(":", "-")
+        urlname = urlname.replace("/", ".")
+        urlout = urldir + "/" + urlname + "-" + timestamp
+        datlines.append(urlout)
+        if testing:
+            if menu:
+                filesfile = open('/tmp/files_out', 'a+')
+                filesfile.write("output of '" + urlline + "': '" + urlout + "'\n")
+                filesfile.close()
+            else:
+                print("output of '" + urlline + "' saves to '" + urlout + "'")
+        else:
+            geturl = openurl(urlline)
+            output = geturl.read()
+            urlfile = open(urlout, "w+")
+            for outline in output:
+                lineout = outline
+                urlfile.write(lineout)
+            urlfile.close()
+
+def main(argv):
+
+    # Variable defaults values
+    istest = False
+    isdefault = True
+    ismenu = False
+    timestamp = now("%Y%m%d%H%M%S%z")
+    datfile = DATA
+    tmpdir = "/opt/proofpoint/tmp"
+    outpath = "/opt/proofpoint/getlogs"
+    getkey = "always"
+
+    gethost = subopen("hostname", stdout=subpipe)
+    hostout, error = gethost.communicate()
+    hostname = hostout.split('.')[0]
+
+    outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+    
+    try:
+        opts, args = options(argv, "hvsgp:o:k:t:g:",["help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
+    except opterr:
+        help_out()
+        isfail(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            help_out()
+        elif opt in ("-v", "--version"):
+            version_out()
+        elif opt == '--mversion':
+            menu_version()
+        elif opt in ("-s", "--show"):
+            show_out(datfile)
+        elif opt == '--gimme':
+            gimme_out(datfile)
+        elif opt in ("-p", "--path"):
+            outpath = arg
+            fileout = outpath + "/" + outfile
+        elif opt in ("-o", "--output"):
+            outfile = arg
+            fileout = outpath + "/" + outfile
+            isdefault = False
+        elif opt in ("-k", "--keyfile"):
+            datfile = arg
+        elif opt in ("-t", "--temp"):
+            tmpdir = arg
+        elif opt in ("-g", "--get"):
+            getkey = arg
+            if isdefault:
+                outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+        elif opt == '--mget':
+            ismenu = True
+            getkey = arg
+            if isdefault:
+                outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+        elif opt == '--test':
+            istest = True
+        else:
+            help_out
+
+    fileout = outpath + "/" + outfile
+    
+    check_dir(outpath)
+    check_dir(tmpdir)
+    check_keyfile(datfile)
+    read_keyfile(getkey, datfile, ismenu)
+    add_cmds(cmdlines, tmpdir, istest, ismenu)
+    add_urls(urllines, tmpdir, istest, ismenu)
+    add_cfgs(cfglines)
+    add_logs(loglines)
+    make_filelist(datlines, fileout, istest, ismenu)
+    make_tar(datlines, fileout, istest, ismenu)
+
+    cleanup(tmpdir + "/cmds")
+    cleanup(tmpdir + "/urls")
+
+if __name__ == "__main__":
+    main(sysarg[1:])
+
