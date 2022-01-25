@@ -1,0 +1,50 @@
+# keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
+ad,av,emfw,filter,mailflow,spam,tap,ud,::log::/opt/proofpoint/current/var/log/filter.log*
+add-in,addin,encrypt,pe,sr,plug-in,plugin,::log::/opt/proofpoint/current/var/log/admind/webservices*
+add-in,addin,enduser,euweb,plug-in,plugin,::log::/opt/proofpoint/current/var/log/httpd-enduser/*
+add-in,addin,plug-in,plugin,::log::/opt/proofpoint/current/var/log/tomcat/pp_encrypt*
+admin,::log::/opt/proofpoint/current/var/log/admind/admin*
+admin,::log::/opt/proofpoint/current/var/log/httpd-admin/*
+admin,filter,ldap,pe,performance,sr,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/filter.cfg
+admin,filter,ldap,pe,performance,sr,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/*/filter.cfg
+agent,::log::/opt/proofpoint/current/var/log/admind/add_agent.log
+agent,::log::/opt/proofpoint/current/var/log/admind/admin.log*
+alerts,::log::/opt/proofpoint/current/var/log/alert.log
+alerts,::log::/opt/proofpoint/current/var/log/cron/alertmonitor*
+apache,httpd,::log::/opt/proofpoint/current/var/log/http*/*
+api,apiservice,::log::/opt/proofpoint/current/var/log/httpd-apiservice/*
+av,f-secure,fsecure,::log::/opt/proofpoint/current/var/log/fsavd/*
+av,mcafee,::log::/opt/proofpoint/current/var/log/mcafee.log*
+cvs,::cmd::cvs history
+cvs,::cmd::cvs log
+database,db,mariadb,mysql,::log::/opt/proofpoint/current/var/log/db/*
+encrypt,pe,sr,::log::/opt/proofpoint/current/var/log/encrypt/*
+encrypt,pe,sr,::log::/opt/proofpoint/current/var/log/tomcat/*
+enduser,euweb,::log::/opt/proofpoint/current/var/log/admind/enduser*
+enduser,euweb,::log::/opt/proofpoint/current/var/log/cron/euweb*
+filter,mailflow,performance,::log::/var/log/maillog*
+filter,mailflow,::log::/opt/proofpoint/current/var/log/cron/restart_filter*
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/install.status
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/frInstallaAttempts.count
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/install.debug.log*
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/install.log*
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/postupgrade.debug.log*
+fr,upgrade,::log::/opt/proofpoint/current/var/patch/release-*/postupgrade.log*
+hft,::log::/home/hftservice/logs/hftservice-request.log
+hft,::log::/home/hftservice/logs/hftservice-request.error
+ldap,::log::/opt/proofpoint/current/var/log/cron/useradm*
+modsec,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-admin.log*
+modsec,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-enduser.log*
+network,::cmd::ifconfig -a
+network,::cmd::netstat -i
+network,::cmd::netstat -s
+patch,::log::/opt/proofpoint/current/var/patch/patch-*/install.status
+patch,::log::/opt/proofpoint/current/var/patch/patch-*/install.log*
+patch,::log::/opt/proofpoint/current/var/patch/patch-*/process.log*
+performance,::log::/var/log/systemwatch*
+performance,timing,::url::http://127.0.0.1:1235/timing
+performance,status,::url::http://127.0.0.1:1235/status
+regulation,::log::/opt/proofpoint/current/var/log/admind/regulation*
+secureshare,share,::log::/opt/proofpoint/current/var/log/cloud*
+secureshare,share,::log::/opt/proofpoint/current/var/log/admind/secureshare*
+keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
