@@ -25,7 +25,7 @@ from math import ceil as roundup
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "getlogs"
 VERSION = "1.4.2"
-BUILD = "220324.01"
+BUILD = "220324.02"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
