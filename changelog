@@ -39,3 +39,8 @@ Added items suggested by Philip Guenther <pguenther@proofpoint.com> to always ga
 Added various items to data file.
 Misc bug fixes.
 Minor cosmetic changes.
+
+v1.4.2 Beta
+-----------
+Added additional graceful fail errors suggested by Chris Harris
+Misc bug fixes.
