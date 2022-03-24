@@ -24,8 +24,8 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "getlogs"
-VERSION = "1.4.0"
-BUILD = "220104.01"
+VERSION = "1.4.2"
+BUILD = "220324.01"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -99,13 +99,16 @@ def menu_version():
 def show_out(keypath):
     show=(PNAME + "\r\n\r\nValid Keywords:\r\n")
     split2=[]
-    with open(keypath) as filedat:
-        for line in filedat.readlines():
-            if '#' not in line:
-                split1 = line.split('::')[0].split(',')
-                for splitline in split1:
-                    if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
-                        split2.append(splitline)
+    try:
+        with open(keypath) as filedat:
+            for line in filedat.readlines():
+                if '#' not in line:
+                    split1 = line.split('::')[0].split(',')
+                    for splitline in split1:
+                        if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
+                            split2.append(splitline)
+    except IOError:
+        print "Couldn't find the file : {}".format(keypath)
 
     filedat.close()
     split3 = (sorted(list(set(split2))))
@@ -127,13 +130,16 @@ def show_out(keypath):
 def gimme_out(keypath):
     show=''
     split2=[]
-    with open(keypath) as filedat:
-        for line in filedat.readlines():
-            if '#' not in line:
-                split1 = line.split('::')[0].split(',')
-                for splitline in split1:
-                    if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
-                        split2.append(splitline)
+    try:
+        with open(keypath) as filedat:
+            for line in filedat.readlines():
+                if '#' not in line:
+                    split1 = line.split('::')[0].split(',')
+                    for splitline in split1:
+                        if (splitline != '' and splitline != 'overkill' and splitline != 'always'):
+                            split2.append(splitline)
+    except IOError:
+        print "Couldn't find file : {}".format(keypath)
 
     filedat.close()
     split3 = (sorted(list(set(split2))))
@@ -159,9 +165,12 @@ def check_keyfile(keypath):
 def read_keyfile(keyget, filein, menu):
     isallowed = True
     keyget = keyget + ","
-    with open(filein, 'r') as filedat:
-        filelines = filedat.readlines()
-        filedat.close()
+    try:
+        with open(filein, 'r') as filedat:
+            filelines = filedat.readlines()
+            filedat.close()
+    except IOError:
+        print "Couldn't find file : {}".format(filein)
 
     for line in filelines:
         if keyget in line or "always," in line:
@@ -392,4 +401,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sysarg[1:])
-
