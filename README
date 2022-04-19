@@ -1,10 +1,11 @@
-Universal Diagnostic Data Collector (getlogs) v1.1.1-210910.14 Beta
+Universal Diagnostic Data Collector (uddc)
+Formerly 'getlogs'
 
-Usage: getlogs.sh <OPTIONS>
+Usage: uddc.sh <OPTIONS>
 
 Collect diagnostic data.
 
-Example: getlogs.sh --get admin --output admin.tgz
+Example: uddc.sh --get admin --output admin.tgz
 
 Miscellaneous Options:
   -h, --help                Display this help text
@@ -13,13 +14,13 @@ Miscellaneous Options:
 
 File Options:
   -k, --keyfile <file>      Load keyword data from <file>. Default is
-                            /opt/proofpoint/getlogs/getlogs.dat
+                            /opt/proofpoint/uddc/uddc.dat
   -p, --path <path>         Save output in <path>. Default output
-                            path is /opt/proofpoint/getlogs
+                            path is /opt/proofpoint/uddc
   -o, --output <file>       Package data in <file>. File extension
                             should be either tgz or tar.gz or there
                             may be difficulty unpacking it. Default is
-                            getlogs_<HOST>_<KEY>_<TIME>.tgz
+                            uddc_<HOST>_<KEY>_<TIME>.tgz
   -t, --temp <path>         Use <path> as temp directory. Default is
                             /opt/proofpoint/tmp
 
@@ -33,7 +34,7 @@ Data Collection Options:
                             sendmail, admin, fr, hft, alerts, av, etc.
                             Default keyword is filter
 
-Default Valid Keywords as of revision 210910.01 of getlogs.dat:
+Default Valid Keywords as of revision 210910.01 of uddc.dat:
 
 acl                 ad                  add-in              addin
 admin               adqueue             agent               alerts
@@ -78,20 +79,20 @@ Installation:
 
 The easiest method is to download a copy of the gzipped tar (.tgz) file,
 upload to '/opt/proofpoint/' and uncompress. This should create the
-'/opt/proofpoint/getlogs/' directory. This should contain 5 files:
-'example.dat', 'getlogs', 'getlogs.dat', 'getlogs.sh', and 'README'. The
+'/opt/proofpoint/uddc/' directory. This should contain 5 files:
+'example.dat', 'uddc', 'uddc.dat', 'uddc.sh', and 'README'. The
 output file will also be placed in this directory by default.
 
-The 'getlogs.sh' script is the front-end for the UDDC. It can technically be
-run from anywhere as long as 'getlogs' is in the same directory but it is
-recommended that everything remains in '/opt/proofpoint/getlogs/' to minimize
+The 'uddc.sh' script is the front-end for the UDDC. It can technically be
+run from anywhere as long as 'uddc' is in the same directory but it is
+recommended that everything remains in '/opt/proofpoint/uddc/' to minimize
 any confusion.
 
-If you need to download a new copy of the keywords data file (getlogs.dat) but
+If you need to download a new copy of the keywords data file (uddc.dat) but
 don't need a new copy of the rest of the package you can download a copy from
-the wiki. It should be placed in '/opt/proofpoint/getlogs/' to overwrite the
+the wiki. It should be placed in '/opt/proofpoint/uddc/' to overwrite the
 one already in there. If you need to check the revision for the data file run
-'head -1 getlogs.dat' from the commandline.
+'head -1 uddc.dat' from the commandline.
 
 The keyword data files are written in a format to allow for custom keyword
 files as well as easy expansion to the current files should the need arise.
@@ -102,5 +103,5 @@ keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 Currently cfg, cmd, log, and url are the only valid types, anything else in
 the type will be ignored. See 'example.dat' for additional examples.
 
-See 'getlogs -h' or 'getlogs.sh --help' for additional information.
+See 'uddc -h' or 'uddc.sh --help' for additional information.
 
