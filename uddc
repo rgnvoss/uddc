@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
-## Universal Diagnostic Data Collector (getlogs)
+## Universal Diagnostic Data Collector (uddc)
+## formerly 'getlogs'
 ## Written by Rob Voss
 
 # Import required libraries
@@ -23,14 +24,14 @@ from math import ceil as roundup
 
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
-SNAME = "getlogs"
-VERSION = "1.4.2"
-BUILD = "220324.02"
-SUFFIX = "Beta"
+SNAME = "uddc"
+VERSION = "1.4.3"
+BUILD = "220419.01"
+SUFFIX = "Stable"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
 RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"
-DATA = "/opt/proofpoint/getlogs/getlogs.dat"
+DATA = "/opt/proofpoint/uddc/uddc.dat"
 FORBIDDEN = ['kill ', 'killall', 'pkill ', 'reboot', 'shutdown', 'rm ', 'rmdir ', 'chmod ', 'chown ', 'mv ', 'ln ', 'su ', 'sudo ', 'scp ', 'sftp ', 'ssh ', 'vi ', 'vim ', 'nano ']
 
 # Global variables
@@ -43,11 +44,11 @@ cfglines = []
 vout = PNAME + "\r\n"
 helpout = PNAME + """
 
-Usage: getlogs <OPTIONS>
+Usage: uddc <OPTIONS>
 
 Collect diagnostic data.
 
-Example: getlogs --get admin --output admin.tgz
+Example: uddc --get admin --output admin.tgz
 
 Miscellaneous Options:
   -h, --help                Display this help text
@@ -56,13 +57,13 @@ Miscellaneous Options:
 
 File Options:
   -k, --keyfile <file>      Load keyword data from <file>. Default is
-                            /opt/proofpoint/getlogs/getlogs.dat
+                            /opt/proofpoint/uddc/uddc.dat
   -p, --path <path>         Save output in <path>. Default output
-                            path is /opt/proofpoint/getlogs
+                            path is /opt/proofpoint/uddc
   -o, --output <file>       Package data in <file>. File extension
                             should be either tgz or tar.gz or there
                             may be difficulty unpacking it. Default is
-                            getlogs_<HOST>_<KEY>_<TIME>.tgz
+                            uddc_<HOST>_<KEY>_<TIME>.tgz
   -t, --temp <path>         Use <path> as temp directory. Default is
                             /opt/proofpoint/tmp
 
@@ -332,14 +333,14 @@ def main(argv):
     timestamp = now("%Y%m%d%H%M%S%z")
     datfile = DATA
     tmpdir = "/opt/proofpoint/tmp"
-    outpath = "/opt/proofpoint/getlogs"
+    outpath = "/opt/proofpoint/uddc"
     getkey = "always"
 
     gethost = subopen("hostname", stdout=subpipe)
     hostout, error = gethost.communicate()
     hostname = hostout.split('.')[0]
 
-    outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+    outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
     
     try:
         opts, args = options(argv, "hvsgp:o:k:t:g:",["help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
@@ -372,12 +373,12 @@ def main(argv):
         elif opt in ("-g", "--get"):
             getkey = arg
             if isdefault:
-                outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+                outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
         elif opt == '--mget':
             ismenu = True
             getkey = arg
             if isdefault:
-                outfile = "getlogs_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+                outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
         elif opt == '--test':
             istest = True
         else:
@@ -401,3 +402,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sysarg[1:])
+

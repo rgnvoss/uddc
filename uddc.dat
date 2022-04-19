@@ -1,4 +1,5 @@
-# getlogs data file revision 220414.01
+# uddc data file revision 220419.01
+# formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
 # Logs

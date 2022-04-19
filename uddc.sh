@@ -1,17 +1,18 @@
 #!/bin/bash
 
-## Universal Diagnostic Data Collector front-end (getlogs.sh)
+## Universal Diagnostic Data Collector front-end (uddc.sh)
+## formerly 'getlogs.sh'
 ## Written by Rob Voss
 
 TERM=ansi
 
 function mainMenu() {
     
-    TITLE=`./getlogs --mversion`
+    TITLE=`./uddc --mversion`
     HOST=`hostname | sed 's/\..*//g'`
     KEYWORDS=()
 
-    for KEY in `./getlogs --gimme`; do
+    for KEY in `./uddc --gimme`; do
         KEYWORDS=(${KEYWORDS[@]} $KEY ".")
     done
 
@@ -21,15 +22,15 @@ function mainMenu() {
         then
             NOW=`date +%Y%m%d%H%M%S%z`
             OUTPATH=`pwd`
-            OUTFILE="getlogs_"$HOST"_"$KEYOUT"_"$NOW".tgz"
+            OUTFILE="uddc_"$HOST"_"$KEYOUT"_"$NOW".tgz"
  
             if (whiptail --title "Universal Diagnostic Data Collector" --yesno "Gather diagnostic data for "$KEYOUT" issues?" 8 78); then
                 if (whiptail --title "Universal Diagnostic Data Collector" --yesno "List diagnostic data to be collected?" 8 78); then
-                    ./getlogs --mget "$KEYOUT" --test
+                    ./uddc --mget "$KEYOUT" --test
                     whiptail --title "Universal Diagnostic Data Collector" --textbox /tmp/files_out 12 80 --scrolltext
                     rm /tmp/files_out
                 fi
-                unbuffer ./getlogs --mget "$KEYOUT" --output "$OUTFILE" | whiptail --gauge "Gathering "$KEYOUT" diagnostic data." 6 50 0
+                unbuffer ./uddc --mget "$KEYOUT" --output "$OUTFILE" | whiptail --gauge "Gathering "$KEYOUT" diagnostic data." 6 50 0
                 if [[ -f "/tmp/errors_out" ]]; then
                     if (whiptail --title "Universal Diagnostic Data Collector" --yesno "Completed with errors. Show errors?" 8 78); then
                         whiptail --title "Universal Diagnostic Data Collector" --textbox /tmp/errors_out 12 80 --scrolltext
@@ -51,8 +52,8 @@ if [ $# -eq 0 ]
     else
         if [[ " $@ " =~ " --help " || " $@ " =~ " -h " || " $@ " =~ " --show " || " $@ " =~ " -s " ]]
             then
-                ./getlogs $@ | sed 's/ Beta/m Beta/g' | sed 's/ RC/m RC/g' | sed 's/ Stable/m Stable/g' | sed 's/ Final/m Final/g' | sed 's/(getlogs)/(getlogs.sh)/g' | sed 's/: getlogs/: getlogs.sh/g' | less
+                ./uddc $@ | sed 's/ Beta/m Beta/g' | sed 's/ RC/m RC/g' | sed 's/ Stable/m Stable/g' | sed 's/ Final/m Final/g' | sed 's/(uddc)/(uddc.sh)/g' | sed 's/: uddc/: uddc.sh/g' | less
             else
-                ./getlogs $@
+                ./uddc $@
         fi
 fi
