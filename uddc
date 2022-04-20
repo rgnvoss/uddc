@@ -13,7 +13,9 @@ from subprocess import PIPE as subpipe
 from urllib2 import urlopen as openurl
 from glob import glob as dirlist
 from os import makedirs as mkdir
+from os import statvfs as fsspace
 from os.path import exists as isexist
+from os.path import getsize as getfsz
 from sys import exit as isfail
 from sys import argv as sysarg
 from sys import stdout as sysout
@@ -25,9 +27,9 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "1.4.3"
-BUILD = "220419.01"
-SUFFIX = "Stable"
+VERSION = "1.4.4"
+BUILD = "220420.01"
+SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
 RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"
@@ -240,6 +242,28 @@ def make_tar(keysin, tarout, testing, menu):
 
 
 # create list of files
+def check_size(keysin, testing):
+    if not testing:
+        spaceneeded = 0
+        filesize = 0
+        drivespace = fsspace('/opt').f_bavail*fsspace('/opt').f_bsize
+        istoobig = False
+        keylist = sorted(list(set(keysin)))
+        for line in keylist:
+            filelist=sorted(dirlist(line))
+            for files in filelist:
+                filesize = filesize + getfsz(files)
+                if filesize >= drivespace:
+                    istoobig = True
+        if istoobig:
+            spaceneeded = int(((filesize - drivespace) * 1.1) / 1048576)
+            mbfilesize = int(filesize / 1048576)
+            mbdrivespace = int(drivespace / 1048576)
+            print('Insufficient space.\nNeeded: ' + mbfilesize + 'MB\nAvailable: ' + int(drivespace / 1048576) + 'MB\nPlease clear up an additional ' + spaceneeded + 'MB to continue')
+            isfail(2)
+    
+
+# create list of files
 def make_filelist(keysin, tarout, testing, menu):
     if testing:
         keylist = sorted(list(set(keysin)))
@@ -390,10 +414,11 @@ def main(argv):
     check_dir(tmpdir)
     check_keyfile(datfile)
     read_keyfile(getkey, datfile, ismenu)
-    add_cmds(cmdlines, tmpdir, istest, ismenu)
-    add_urls(urllines, tmpdir, istest, ismenu)
     add_cfgs(cfglines)
     add_logs(loglines)
+    check_size(datlines, istest)
+    add_cmds(cmdlines, tmpdir, istest, ismenu)
+    add_urls(urllines, tmpdir, istest, ismenu)
     make_filelist(datlines, fileout, istest, ismenu)
     make_tar(datlines, fileout, istest, ismenu)
 
