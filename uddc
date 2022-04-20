@@ -28,7 +28,7 @@ from math import ceil as roundup
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
 VERSION = "1.4.4"
-BUILD = "220420.01"
+BUILD = "220420.04"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -259,7 +259,7 @@ def check_size(keysin, testing):
             spaceneeded = int(((filesize - drivespace) * 1.1) / 1048576)
             mbfilesize = int(filesize / 1048576)
             mbdrivespace = int(drivespace / 1048576)
-            print('Insufficient space.\nNeeded: ' + mbfilesize + 'MB\nAvailable: ' + int(drivespace / 1048576) + 'MB\nPlease clear up an additional ' + spaceneeded + 'MB to continue')
+            print('Insufficient space.\nNeeded: ' + mbfilesize + 'MB\nAvailable: ' + mbdrivespace + 'MB\nPlease clear up an additional ' + spaceneeded + 'MB to continue')
             isfail(2)
     
 
