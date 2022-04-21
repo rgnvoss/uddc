@@ -28,7 +28,7 @@ from math import ceil as roundup
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
 VERSION = "1.4.4"
-BUILD = "220420.04"
+BUILD = "220421.03"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -242,11 +242,11 @@ def make_tar(keysin, tarout, testing, menu):
 
 
 # create list of files
-def check_size(keysin, testing):
+def check_size(keysin, outdir, testing):
     if not testing:
         spaceneeded = 0
         filesize = 0
-        drivespace = fsspace('/opt').f_bavail*fsspace('/opt').f_bsize
+        drivespace = fsspace(outdir).f_bavail*fsspace(outdir).f_bsize
         istoobig = False
         keylist = sorted(list(set(keysin)))
         for line in keylist:
@@ -367,7 +367,7 @@ def main(argv):
     outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
     
     try:
-        opts, args = options(argv, "hvsgp:o:k:t:g:",["help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
+        opts, args = options(argv, "hvsp:o:k:t:g:",["help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
     except opterr:
         help_out()
         isfail(2)
@@ -416,7 +416,7 @@ def main(argv):
     read_keyfile(getkey, datfile, ismenu)
     add_cfgs(cfglines)
     add_logs(loglines)
-    check_size(datlines, istest)
+    check_size(datlines, outpath, istest)
     add_cmds(cmdlines, tmpdir, istest, ismenu)
     add_urls(urllines, tmpdir, istest, ismenu)
     make_filelist(datlines, fileout, istest, ismenu)
