@@ -27,8 +27,8 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "1.4.4"
-BUILD = "220421.03"
+VERSION = "1.4.6"
+BUILD = "220421.05"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -56,6 +56,7 @@ Miscellaneous Options:
   -h, --help                Display this help text
   -v, --version             Display version information
   -s, --show                Display valid keywords
+  -q, --quiet               Suppress excess output to screen
 
 File Options:
   -k, --keyfile <file>      Load keyword data from <file>. Default is
@@ -199,7 +200,7 @@ def read_keyfile(keyget, filein, menu):
 
 
 # create tgz file
-def make_tar(keysin, tarout, testing, menu):
+def make_tar(keysin, tarout, testing, menu, quiet):
     if not testing:
         keylist = sorted(list(set(keysin)))
         tar = mktar(tarout, "w|gz")
@@ -216,12 +217,13 @@ def make_tar(keysin, tarout, testing, menu):
         if menu:
             print(0)
             print(1)
-        else:
-            print("Gathering data. This may take some time.")
         for line in keylist:
             filelist=sorted(dirlist(line))
             for files in filelist:
-                if menu:
+                if quiet:
+                    keytemp = keytemp + keystep
+                    keycount = keytemp
+                elif menu:
                     print(int(keycount))
                     keytemp = keytemp + keystep
                     keycount = keytemp
@@ -351,6 +353,7 @@ def add_urls(urlsin, tmpin, testing, menu):
 def main(argv):
 
     # Variable defaults values
+    isquiet = False
     istest = False
     isdefault = True
     ismenu = False
@@ -367,13 +370,15 @@ def main(argv):
     outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
     
     try:
-        opts, args = options(argv, "hvsp:o:k:t:g:",["help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
+        opts, args = options(argv, "qhvsp:o:k:t:g:",["quiet", "help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
     except opterr:
         help_out()
         isfail(2)
 
     for opt, arg in opts:
-        if opt in ("-h", "--help"):
+        if opt in ("-q", "--quiet"):
+            isquiet = True
+        elif opt in ("-h", "--help"):
             help_out()
         elif opt in ("-v", "--version"):
             version_out()
@@ -414,13 +419,17 @@ def main(argv):
     check_dir(tmpdir)
     check_keyfile(datfile)
     read_keyfile(getkey, datfile, ismenu)
+
+    if not ismenu:
+        print("Gathering data. This may take some time.")
+
     add_cfgs(cfglines)
     add_logs(loglines)
     check_size(datlines, outpath, istest)
     add_cmds(cmdlines, tmpdir, istest, ismenu)
     add_urls(urllines, tmpdir, istest, ismenu)
     make_filelist(datlines, fileout, istest, ismenu)
-    make_tar(datlines, fileout, istest, ismenu)
+    make_tar(datlines, fileout, istest, ismenu, isquiet)
 
     cleanup(tmpdir + "/cmds")
     cleanup(tmpdir + "/urls")
