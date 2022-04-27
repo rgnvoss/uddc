@@ -27,8 +27,8 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "1.4.6"
-BUILD = "220421.05"
+VERSION = "2.0.0"
+BUILD = "220427.08"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -362,6 +362,8 @@ def main(argv):
     tmpdir = "/opt/proofpoint/tmp"
     outpath = "/opt/proofpoint/uddc"
     getkey = "always"
+    getkeylist = ""
+    getkeyarray = []
 
     gethost = subopen("hostname", stdout=subpipe)
     hostout, error = gethost.communicate()
@@ -401,8 +403,10 @@ def main(argv):
             tmpdir = arg
         elif opt in ("-g", "--get"):
             getkey = arg
+            getkeyarray = getkey.split(",")
             if isdefault:
-                outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+                getkeylist = getkey.replace(",","+")
+                outfile = "uddc_" + hostname + "_" + getkeylist + "_" + timestamp + ".tgz"
         elif opt == '--mget':
             ismenu = True
             getkey = arg
@@ -418,10 +422,15 @@ def main(argv):
     check_dir(outpath)
     check_dir(tmpdir)
     check_keyfile(datfile)
-    read_keyfile(getkey, datfile, ismenu)
+
+    if ismenu:
+        read_keyfile(getkey, datfile, ismenu)
+    else:
+        for i in range(len(getkeyarray)):
+            read_keyfile(getkeyarray[i], datfile, ismenu)
 
     if not ismenu:
-        print("Gathering data. This may take some time.")
+        print("Gathering data. Please be patient, this may take some time.")
 
     add_cfgs(cfglines)
     add_logs(loglines)
@@ -436,4 +445,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sysarg[1:])
-
