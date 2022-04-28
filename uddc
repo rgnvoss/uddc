@@ -27,8 +27,8 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "2.0.0"
-BUILD = "220427.08"
+VERSION = "2.0.2"
+BUILD = "220428.01"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -410,8 +410,10 @@ def main(argv):
         elif opt == '--mget':
             ismenu = True
             getkey = arg
+            getkeyarray = getkey.split(",")
             if isdefault:
-                outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
+                getkeylist = getkey.replace(",","+")
+                outfile = "uddc_" + hostname + "_" + getkeylist + "_" + timestamp + ".tgz"
         elif opt == '--test':
             istest = True
         else:
@@ -423,11 +425,8 @@ def main(argv):
     check_dir(tmpdir)
     check_keyfile(datfile)
 
-    if ismenu:
-        read_keyfile(getkey, datfile, ismenu)
-    else:
-        for i in range(len(getkeyarray)):
-            read_keyfile(getkeyarray[i], datfile, ismenu)
+    for i in range(len(getkeyarray)):
+        read_keyfile(getkeyarray[i], datfile, ismenu)
 
     if not ismenu:
         print("Gathering data. Please be patient, this may take some time.")

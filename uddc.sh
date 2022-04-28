@@ -3,6 +3,8 @@
 ## Universal Diagnostic Data Collector front-end (uddc.sh)
 ## formerly 'getlogs.sh'
 ## Written by Rob Voss
+##
+## Menu Revision 220428.01
 
 TERM=ansi
 
@@ -10,27 +12,31 @@ function mainMenu() {
     
     TITLE=`./uddc --mversion`
     HOST=`hostname | sed 's/\..*//g'`
-    KEYWORDS=()
+    KEYWORDS=""
 
     for KEY in `./uddc --gimme`; do
-        KEYWORDS=(${KEYWORDS[@]} $KEY ".")
+        KEYWORDS+=$KEY' . OFF '
     done
 
-    KEYOUT=$(whiptail --title " $TITLE " --menu "Select issue type:" 22 75 14 "${KEYWORDS[@]}"  3>&1 1>&2 2>&3)
+    KEYOUT=$(whiptail --title " $TITLE " --checklist "Select issue type(s):" 22 75 14 $KEYWORDS 3>&1 1>&2 2>&3)
+
+    printf -v joined '%s,' $KEYOUT
+    KEYLIST=`echo ${joined%,} | sed 's/\"//g'`
+    KEYNAMES=`echo $KEYLIST | sed 's/,/+/g'`
 
     if [ "$KEYOUT" != "" ]
         then
             NOW=`date +%Y%m%d%H%M%S%z`
             OUTPATH=`pwd`
-            OUTFILE="uddc_"$HOST"_"$KEYOUT"_"$NOW".tgz"
+            OUTFILE="uddc_"$HOST"_"$KEYNAMES"_"$NOW".tgz"
  
-            if (whiptail --title "Universal Diagnostic Data Collector" --yesno "Gather diagnostic data for "$KEYOUT" issues?" 8 78); then
+            if (whiptail --title "Universal Diagnostic Data Collector" --yesno "Gather diagnostic data for "$KEYNAMES" issues?" 8 78); then
                 if (whiptail --title "Universal Diagnostic Data Collector" --yesno "List diagnostic data to be collected?" 8 78); then
-                    ./uddc --mget "$KEYOUT" --test
+                    ./uddc --mget "$KEYLIST" --test
                     whiptail --title "Universal Diagnostic Data Collector" --textbox /tmp/files_out 12 80 --scrolltext
                     rm /tmp/files_out
                 fi
-                unbuffer ./uddc --mget "$KEYOUT" --output "$OUTFILE" | whiptail --gauge "Gathering "$KEYOUT" diagnostic data." 6 50 0
+                unbuffer ./uddc --mget "$KEYLIST" --output "$OUTFILE" | whiptail --gauge "Gathering "$KEYNAMES" diagnostic data." 6 50 0
                 if [[ -f "/tmp/errors_out" ]]; then
                     if (whiptail --title "Universal Diagnostic Data Collector" --yesno "Completed with errors. Show errors?" 8 78); then
                         whiptail --title "Universal Diagnostic Data Collector" --textbox /tmp/errors_out 12 80 --scrolltext
