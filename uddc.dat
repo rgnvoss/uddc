@@ -1,4 +1,4 @@
-# uddc data file revision 220419.01
+# uddc data file revision 220504.02
 # formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
@@ -30,9 +30,6 @@ alerts,overkill,::log::/opt/proofpoint/current/var/log/alert.log
 alerts,overkill,::log::/opt/proofpoint/current/var/log/cron/alertmonitor*
 alerts,overkill,::log::/opt/proofpoint/current/var/log/cron/gen_alert*
 aliases,config,overkill,::log::/opt/proofpoint/current/var/log/appliance/pp-setup-aliases.log
-always,::log::/var/log/dmesg
-always,::log::/var/log/kernel
-always,::log::/var/log/messages
 apache,httpd,overkill,::log::/opt/proofpoint/current/var/log/http*/*
 apache,httpd,services,overkill,::log::/opt/proofpoint/current/var/log/httpd*/*
 api,apiservice,overkill,::log::/opt/proofpoint/current/var/log/httpd-apiservice/*
@@ -142,6 +139,7 @@ logs,rsyslog,overkill,::log::/var/log/rsyslog
 mailflow,maillog,queue,sendmail,smtp,overkill,::log::/var/log/maillog
 mailflow,procmail,system,overkill,::log::/home/support/procmaillog
 mailflow,queue,smtp,overkill,::log::/opt/proofpoint/current/var/log/queue.log
+mis,services,smartsearch,overkill,::log::/pps-8.0.1.1446/var/log/cron/pplogbeat*
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-admin.log
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-admin.log*
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-enduser.log*
@@ -199,14 +197,11 @@ update,upgrade,overkill,::log::/opt/proofpoint/current/var/log/fsavd/dbupdate.lo
 update,upgrade,overkill,::log::/opt/proofpoint/current/var/pp/install.sh*.log
 update,upgrade,overkill,::log::/opt/proofpoint/var/log/update_upgrade/current_update/*.log
 
-
 # Configs
 admin,filter,ldap,pe,performance,sr,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/filter.cfg
 admin,filter,ldap,pe,performance,sr,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/*/filter.cfg
 admin,os,plinx,system,overkill,::cfg::/opt/proofpoint/current/admin/etc/admind/servers/*
 admin,services,overkill,::cfg::/opt/proofpoint/current/var/httpd/admin/conf/*
-always,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/filter.cfg
-always,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/*/filter.cfg
 apache,encryption,pe,httpd,sr,tomcat,overkill,::cfg::/opt/proofpoint/current/opt/apache-tomcat/conf/*
 apache,httpd,overkill,::cfg::/opt/proofpoint/current/var/httpd/*/conf/*
 api,services,overkill,::cfg::/opt/proofpoint/current/var/httpd/apiservice/conf/*
@@ -306,14 +301,12 @@ udev,system,overkill,::cfg::/etc/udev/udev.conf
 users,system,overkill,::cfg::/etc/libuser.conf
 
 # Commands
-always,::cmd::unbuffer df -i
-always,::cmd::unbuffer df -k
-always,::cmd::unbuffer free -m
-always,::cmd::unbuffer lsof
-always,::cmd::unbuffer netstat -nap
-always,::cmd::unbuffer ps xajww
 cvs,overkill,::cmd::unbuffer cvs history
 cvs,overkill,::cmd::unbuffer cvs log
+git,overkill,::cmd::unbuffer git log
+git,overkill,::cmd::unbuffer git status
+git,overkill,::cmd::unbuffer git show
+mis,services,smartsearch,overkill,::cmd::unbuffer /opt/proofpoint/current/admin/tools/psshealth.pl
 network,overkill,::cmd::unbuffer ifconfig -a
 network,overkill,::cmd::unbuffer netstat -i
 network,overkill,::cmd::unbuffer netstat -s
@@ -321,3 +314,16 @@ network,overkill,::cmd::unbuffer netstat -s
 # URLs
 performance,status,overkill,::url::http://127.0.0.1:1235/status
 performance,timing,overkill,::url::http://127.0.0.1:1235/timing
+
+# Always gathered
+always,::log::/var/log/dmesg
+always,::log::/var/log/kernel
+always,::log::/var/log/messages
+always,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/filter.cfg
+always,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/*/filter.cfg
+always,::cmd::unbuffer df -i
+always,::cmd::unbuffer df -k
+always,::cmd::unbuffer free -m
+always,::cmd::unbuffer lsof
+always,::cmd::unbuffer netstat -nap
+always,::cmd::unbuffer ps xajww
