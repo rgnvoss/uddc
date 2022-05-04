@@ -28,7 +28,7 @@ from math import ceil as roundup
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
 VERSION = "2.0.2"
-BUILD = "220428.01"
+BUILD = "220504.09"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -227,10 +227,15 @@ def make_tar(keysin, tarout, testing, menu, quiet):
                     print(int(keycount))
                     keytemp = keytemp + keystep
                     keycount = keytemp
+                    if keycount > 100:
+                        keycount = 100
                 else:
                     print("Progress: " + str(int(keycount)) + "%")
+                    sysout.write("\033[F")
                     keytemp = keytemp + keystep
                     keycount = keytemp
+                    if keycount > 100:
+                        keycount = 100
                 try:
                     tar.add(files)
                 except IOError:
@@ -261,7 +266,7 @@ def check_size(keysin, outdir, testing):
             spaceneeded = int(((filesize - drivespace) * 1.1) / 1048576)
             mbfilesize = int(filesize / 1048576)
             mbdrivespace = int(drivespace / 1048576)
-            print('Insufficient space.\nNeeded: ' + mbfilesize + 'MB\nAvailable: ' + mbdrivespace + 'MB\nPlease clear up an additional ' + spaceneeded + 'MB to continue')
+            print('Insufficient space.\nNeeded: ' + str(mbfilesize) + 'MB\nAvailable: ' + str(mbdrivespace) + 'MB\nPlease clear up an additional ' + str(spaceneeded) + 'MB to continue')
             isfail(2)
     
 
@@ -441,6 +446,9 @@ def main(argv):
 
     cleanup(tmpdir + "/cmds")
     cleanup(tmpdir + "/urls")
+
+    if not ismenu:
+        print("Data gathering complete.")
 
 if __name__ == "__main__":
     main(sysarg[1:])
