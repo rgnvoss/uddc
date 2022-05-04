@@ -28,13 +28,16 @@ from math import ceil as roundup
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
 VERSION = "2.0.2"
-BUILD = "220504.09"
+BUILD = "220504.10"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
 RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"
 DATA = "/opt/proofpoint/uddc/uddc.dat"
 FORBIDDEN = ['kill ', 'killall', 'pkill ', 'reboot', 'shutdown', 'rm ', 'rmdir ', 'chmod ', 'chown ', 'mv ', 'ln ', 'su ', 'sudo ', 'scp ', 'sftp ', 'ssh ', 'vi ', 'vim ', 'nano ']
+# Constants to be added for additional functionality (not yet implemented)
+# CVSDIR = "/opt/proofpoint/current/admin/admind/deploy"
+# GITDIR = ""
 
 # Global variables
 timestamp = now("%Y%m%d%H%M%S%z")
