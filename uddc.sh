@@ -4,7 +4,7 @@
 ## formerly 'getlogs.sh'
 ## Written by Rob Voss
 ##
-## Menu Revision 220428.01
+## Menu Revision 220509.01
 
 TERM=ansi
 
@@ -18,7 +18,7 @@ function mainMenu() {
         KEYWORDS+=$KEY' . OFF '
     done
 
-    KEYOUT=$(whiptail --title " $TITLE " --checklist "Select issue type(s):" 22 75 14 $KEYWORDS 3>&1 1>&2 2>&3)
+    KEYOUT=$(whiptail --title " $TITLE " --checklist "Use spacebar to select issue type(s):" 22 75 14 $KEYWORDS 3>&1 1>&2 2>&3)
 
     printf -v joined '%s,' $KEYOUT
     KEYLIST=`echo ${joined%,} | sed 's/\"//g'`

@@ -14,6 +14,8 @@ from urllib2 import urlopen as openurl
 from glob import glob as dirlist
 from os import makedirs as mkdir
 from os import statvfs as fsspace
+from os import remove as rmfile
+from os import listdir as filelist
 from os.path import exists as isexist
 from os.path import getsize as getfsz
 from sys import exit as isfail
@@ -27,9 +29,9 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "2.0.3"
-BUILD = "220509.01"
-SUFFIX = "Stable"
+VERSION = "2.1.2"
+BUILD = "220509.06"
+SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
 RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"
@@ -56,10 +58,12 @@ Collect diagnostic data.
 Example: uddc --get admin --output admin.tgz
 
 Miscellaneous Options:
-  -h, --help                Display this help text
-  -v, --version             Display version information
-  -s, --show                Display valid keywords
-  -q, --quiet               Suppress excess output to screen
+  -h, --help                Display this help text.
+  -v, --version             Display version information.
+  -s, --show                Display valid keywords.
+  -q, --quiet               Suppress excess output to screen.
+  --selfdestruct            Delete all files in UDDC directory except
+                            for the output.
 
 File Options:
   -k, --keyfile <file>      Load keyword data from <file>. Default is
@@ -74,14 +78,20 @@ File Options:
                             /opt/proofpoint/tmp
 
 Data Collection Options:
-  --test                    Test mode. Displays a list of files that
-                            would be collected. Does not actually create
-                            an output file.
   -g, --get <keyword>       Collect diagnostic data for <keyword>. The
                             keyword should represent what type of issue
                             you need diagnostic data for, such as filter,
                             sendmail, admin, fr, hft, alerts, av, etc.
                             Default keyword is always
+  --test                    Test mode. Displays a list of files that
+                            would be collected. Does not actually create
+                            an output file.
+  --nocfgs                  Skip collecting configuration data.
+  --nocmds                  Skip collecting command output.
+  --nologs                  Skip collecting logs.
+  --nourls                  Skip collecting URL output.
+  --notalways               Skip collecting the default data. Only
+                            collect keyword specific data.
 """
 
 # Help page
@@ -169,7 +179,7 @@ def check_keyfile(keypath):
 
 
 # read in keyword data
-def read_keyfile(keyget, filein, menu):
+def read_keyfile(keyget, filein, menu, chkalways, chkcfgs, chkcmds, chklogs, chkurls):
     isallowed = True
     keyget = keyget + ","
     try:
@@ -180,8 +190,8 @@ def read_keyfile(keyget, filein, menu):
         print "Couldn't find file : {}".format(filein)
 
     for line in filelines:
-        if keyget in line or "always," in line:
-            if ':cmd:' in line:
+        if (keyget in line) or (chkalways and ("always," in line)):
+            if (chkcmds and (':cmd:' in line)):
                 isallowed = True
                 for badcmd in FORBIDDEN:
                     if badcmd in line.split('::')[-1]:
@@ -194,11 +204,11 @@ def read_keyfile(keyget, filein, menu):
                             errorfile.close()
                 if isallowed:
                     cmdlines.append(line.split('::')[-1].replace("\n", ""))
-            elif ':cfg:' in line:
+            elif (chkcfgs and (':cfg:' in line)):
                 cfglines.append(line.split('::')[-1].replace("\n", ""))
-            elif ':log:' in line:
+            elif (chklogs and (':log:' in line)):
                 loglines.append(line.split('::')[-1].replace("\n", ""))
-            elif ':url:' in line:
+            elif (chkurls and (':url:' in line)):
                 urllines.append(line.split('::')[-1].replace("\n", ""))
 
 
@@ -365,6 +375,7 @@ def main(argv):
     istest = False
     isdefault = True
     ismenu = False
+    isalways = True
     timestamp = now("%Y%m%d%H%M%S%z")
     datfile = DATA
     tmpdir = "/opt/proofpoint/tmp"
@@ -372,6 +383,11 @@ def main(argv):
     getkey = "always"
     getkeylist = ""
     getkeyarray = []
+    getcfgs = True
+    getcmds = True
+    getlogs = True
+    geturls = True
+    goboom = False
 
     gethost = subopen("hostname", stdout=subpipe)
     hostout, error = gethost.communicate()
@@ -380,7 +396,9 @@ def main(argv):
     outfile = "uddc_" + hostname + "_" + getkey + "_" + timestamp + ".tgz"
     
     try:
-        opts, args = options(argv, "qhvsp:o:k:t:g:",["quiet", "help", "version", "mversion", "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", "test"])
+        opts, args = options(argv, "qhvsp:o:k:t:g:",["quiet", "help", "version", "mversion", \
+        "show", "gimme", "path=", "output=", "keyfile=", "temp=", "get=", "mget=", \
+        "test", "notalways", "nocfgs", "nocmds", "nologs", "nourls", "selfdestruct"])
     except opterr:
         help_out()
         isfail(2)
@@ -424,6 +442,18 @@ def main(argv):
                 outfile = "uddc_" + hostname + "_" + getkeylist + "_" + timestamp + ".tgz"
         elif opt == '--test':
             istest = True
+        elif opt == '--notalways':
+            isalways = False
+        elif opt == '--nocfgs':
+            getcfgs = False
+        elif opt == '--nocmds':
+            getcmds = False
+        elif opt == '--nologs':
+            getlogs = False
+        elif opt == '--nourls':
+            geturls = False
+        elif opt == '--selfdestruct':
+            goboom = True
         else:
             help_out
 
@@ -434,7 +464,7 @@ def main(argv):
     check_keyfile(datfile)
 
     for i in range(len(getkeyarray)):
-        read_keyfile(getkeyarray[i], datfile, ismenu)
+        read_keyfile(getkeyarray[i], datfile, ismenu, isalways, getcfgs, getcmds, getlogs, geturls)
 
     if not ismenu:
         print("Gathering data. Please be patient, this may take some time.")
@@ -452,6 +482,15 @@ def main(argv):
 
     if not ismenu:
         print("Data gathering complete.")
+
+    if goboom:
+        print("Self destruct activated.")
+        dirfiles = filelist("./")
+        for line in dirfiles:
+            if outfile not in line:
+                rmfile(line)
+        print("Self destruct completed.")
+        print("Only " + fileout + " remains.")
 
 if __name__ == "__main__":
     main(sysarg[1:])
