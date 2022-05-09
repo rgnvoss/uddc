@@ -27,9 +27,9 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "2.0.2"
-BUILD = "220504.10"
-SUFFIX = "Beta"
+VERSION = "2.0.3"
+BUILD = "220509.01"
+SUFFIX = "Stable"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
 RUNFROM = "/opt/proofpoint/current/admin/admind/deploy"

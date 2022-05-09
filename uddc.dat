@@ -1,4 +1,4 @@
-# uddc data file revision 220504.02
+# uddc data file revision 220509.01
 # formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
@@ -139,7 +139,7 @@ logs,rsyslog,overkill,::log::/var/log/rsyslog
 mailflow,maillog,queue,sendmail,smtp,overkill,::log::/var/log/maillog
 mailflow,procmail,system,overkill,::log::/home/support/procmaillog
 mailflow,queue,smtp,overkill,::log::/opt/proofpoint/current/var/log/queue.log
-mis,services,smartsearch,overkill,::log::/pps-8.0.1.1446/var/log/cron/pplogbeat*
+mis,services,smartsearch,overkill,::log::/opt/proofpoint/current/var/log/cron/pplogbeat*
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-admin.log
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-admin.log*
 modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-admin/modsec_audit-enduser.log*
