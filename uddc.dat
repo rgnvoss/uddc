@@ -1,4 +1,4 @@
-# uddc data file revision 220509.01
+# uddc data file revision 220513.02
 # formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
@@ -301,6 +301,7 @@ udev,system,overkill,::cfg::/etc/udev/udev.conf
 users,system,overkill,::cfg::/etc/libuser.conf
 
 # Commands
+fixit,::cmd::unbuffer touch /opt/proofpoint/pps-8.0.1.1446/opt/queued/etc/dhparam.pem
 cvs,overkill,::cmd::unbuffer cvs history
 cvs,overkill,::cmd::unbuffer cvs log
 git,overkill,::cmd::unbuffer git log
