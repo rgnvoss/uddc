@@ -1,4 +1,4 @@
-# uddc data file revision 220513.02
+# uddc data file revision 220513.03
 # formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
@@ -301,7 +301,6 @@ udev,system,overkill,::cfg::/etc/udev/udev.conf
 users,system,overkill,::cfg::/etc/libuser.conf
 
 # Commands
-fixit,::cmd::unbuffer touch /opt/proofpoint/pps-8.0.1.1446/opt/queued/etc/dhparam.pem
 cvs,overkill,::cmd::unbuffer cvs history
 cvs,overkill,::cmd::unbuffer cvs log
 git,overkill,::cmd::unbuffer git log
@@ -328,3 +327,6 @@ always,::cmd::unbuffer free -m
 always,::cmd::unbuffer lsof
 always,::cmd::unbuffer netstat -nap
 always,::cmd::unbuffer ps xajww
+
+# Missing linked file fix
+fixit,::cmd::unbuffer touch /opt/proofpoint/pps-8.0.1.1446/opt/queued/etc/dhparam.pem
