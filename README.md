@@ -1,16 +1,21 @@
 Universal Diagnostic Data Collector (uddc)
 Formerly 'getlogs'
 
-Usage: uddc.sh <OPTIONS>
+See https://wiki.proofpoint.com/wiki/display/LRNPPS/Universal+Diagnostic+Data+Collector for additional information.
+
+Usage: uddc <OPTIONS>
 
 Collect diagnostic data.
 
 Example: uddc.sh --get admin --output admin.tgz
 
 Miscellaneous Options:
-  -h, --help                Display this help text
-  -v, --version             Display version information
-  -s, --show                Display valid keywords
+  -h, --help                Display this help text.
+  -v, --version             Display version information.
+  -s, --show                Display valid keywords.
+  -q, --quiet               Suppress excess output to screen.
+  --selfdestruct            Delete all files in UDDC directory except
+                            for the output.
 
 File Options:
   -k, --keyfile <file>      Load keyword data from <file>. Default is
@@ -25,55 +30,63 @@ File Options:
                             /opt/proofpoint/tmp
 
 Data Collection Options:
-  --test                    Test mode. Displays a list of files that
-                            would be collected. Does not actually create
-                            an output file.
   -g, --get <keyword>       Collect diagnostic data for <keyword>. The
                             keyword should represent what type of issue
                             you need diagnostic data for, such as filter,
                             sendmail, admin, fr, hft, alerts, av, etc.
-                            Default keyword is filter
+                            Default keyword is always
+  --test                    Test mode. Displays a list of files that
+                            would be collected. Does not actually create
+                            an output file.
+  --nocfgs                  Skip collecting configuration data.
+  --nocmds                  Skip collecting command output.
+  --nologs                  Skip collecting logs.
+  --nourls                  Skip collecting URL output.
+  --notalways               Skip collecting the default data. Only
+                            collect keyword specific data.
 
 Default Valid Keywords as of revision 210910.01 of uddc.dat:
 
-acl                 ad                  add-in              addin
-admin               adqueue             agent               alerts
-aliases             apache              api                 apiservice
-audit               auth                authentication      av
-background          cloud               cloudquarantine     cloudservices
-cloudsync           cluster             cmdprocessor        config
-configcenter        cqs                 cron                cvs
-cvtd                da                  database            db
-dbmsgqueue          deploy              digest              digitalassets
-disks               dns                 drives              emails
-emfw                encrypt             encryption          enduser
-engines             euweb               events              f-secure
-filter              fr                  fsecure             groups
-hardware            hdd                 heartbeat           hft
-honeypoint          httpd               imports             iproutes
-iptables            ipv4                ipv6                jobs
-kernel              ldap                licenses            log
-logdb               logging             login               logrotate
-logs                logutils            lvm                 mailflow
-maillog             mariadb             mcafee              megacli
-mis                 modsec              monitor             mtadb
-mtools              mysql               named               network
-ntp                 os                  overkill            passwords
-patch               pe                  performance         permissions
-plinx               plug-in             plugin              procmail
-pwinfos             qexpire             quarantine          queue
-queued              raid                regcomp             regulation
-rename              replication         reporting           reports
-routes              rpm                 rsyslog             saml
-sar                 secureshare         security            sel
-selinux             sendmail            sensors             services
-share               smartsearch         smtp                snmp
-spam                sr                  ssh                 sshd
-ssl                 status              sudo                sync
-syncbox             system              systemwatch         tap
-template            timing              tomcat              ud
-udev                update              upgrade             useradm
-users               usersync            watchdog            yum
+acl                 ad                  add-in
+addin               admin               adqueue             agent
+alerts              aliases             apache              api
+apiservice          audit               auth                authentication
+av                  background          cloud               cloudquarantine
+cloudservices       cloudsync           cluster             cmdprocessor
+config              configcenter        cqs                 cron
+cvs                 cvtd                da                  database
+db                  dbmsgqueue          deploy              digest
+digitalassets       disks               dns                 drives
+emails              emfw                encrypt             encryption
+enduser             engines             euweb               events
+f-secure            filter              fr                  fsecure
+git                 groups              hardware            hdd
+heartbeat           hft                 honeypoint          httpd
+imports             iproutes            iptables            ipv4
+ipv6                jobs                kernel              ldap
+licenses            log                 logdb               logging
+login               logrotate           logs                logutils
+lvm                 mailflow            maillog             mariadb
+mcafee              megacli             mis                 modsec
+monitor             mtadb               mtools              mysql
+named               network             ntp                 os
+passwords           patch               pe                  performance
+permissions         plinx               plug-in             plugin
+procmail            pwinfos             qexpire             quarantine
+queue               queued              raid                regcomp
+regulation          rename              replication         reporting
+reports             routes              rpm                 rsyslog
+saml                sar                 secureshare         security
+sel                 selinux             sendmail            sensors
+services            share               smartsearch         smtp
+snmp                spam                sr                  ssh
+sshd                ssl                 status              sudo
+sync                syncbox             system              systemwatch
+tap                 template            timing              tomcat
+ud                  udev                update              upgrade
+useradm             users               usersync            watchdog
+yum
+
 
 Installation:
 
