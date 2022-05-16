@@ -1,4 +1,4 @@
-# uddc data file revision 220513.03
+# uddc data file revision 220513.04
 # formerly 'getlogs.dat'
 # keyword1,keyword2,keyword3,::type::/path/to/file(s) or command or url
 
@@ -62,7 +62,7 @@ config,overkill,::log::/opt/proofpoint/current/var/queued/*/log/config.log*
 config,performance,overkill,::log::/opt/proofpoint/current/var/log/admind/dynamic_config.log
 config,rename,sendmail,overkill,::log::/opt/proofpoint/current/var/log/appliance/sendmail-rename.log
 config,rpm,yum,overkill,::log::/tmp/ks-script-*.log
-config,rpm,yum,overkill,::log::/var/log/yum.log
+config,rpm,yum,overkill,::log::/var/log/yum.*
 config,security,overkill,::log::/opt/proofpoint/current/var/log/appliance/pp-menu.log
 config,security,overkill,::log::/opt/proofpoint/current/var/log/appliance/pp-setup-datetime.log
 config,sendmail,overkill,::log::/opt/proofpoint/current/var/log/admind/sendmail*
@@ -76,7 +76,7 @@ cron,events,overkill,::log::/opt/proofpoint/current/var/log/cron/eventutil.error
 cron,imports,useradm,overkill,::log::/opt/proofpoint/current/var/log/cron/useradm*
 cron,services,overkill,::log::/opt/proofpoint/current/var/log/admind/cronutil.log*
 cron,services,overkill,::log::/opt/proofpoint/current/var/log/cron/cron_tokenize.error
-cron,system,overkill,::log::/var/log/cron
+cron,system,overkill,::log::/var/log/cron*
 cron,update,overkill,::log::/opt/proofpoint/current/var/log/admind/updates_util.log
 cvtd,filter,mailflow,overkill,::log::/opt/proofpoint/current/var/log/cvtd.log
 da,digitalassets,filter,services,overkill,::log::/opt/proofpoint/current/var/log/cron/dautil*
@@ -118,6 +118,7 @@ fr,upgrade,overkill,::log::/opt/proofpoint/current/var/patch/release-*/install.s
 fr,upgrade,overkill,::log::/opt/proofpoint/current/var/patch/release-*/postupgrade.debug.log*
 fr,upgrade,overkill,::log::/opt/proofpoint/current/var/patch/release-*/postupgrade.log*
 hardware,megacli,raid,system,overkill,::log::/opt/megaraid/megacli/install.log
+hardware,megacli,raid,system,overkill,::log::/opt/MegaRAID/MegaCli/install.log
 heartbeat,overkill,::log::/opt/proofpoint/current/var/log/cron/heartbeat.log
 heartbeat,passwords,pwinfos,overkill,::log::/opt/proofpoint/current/var/log/cron/fetch_pwinfos.error
 heartbeat,services,overkill,::log::/opt/proofpoint/current/var/log/admind/heartbeat2*
@@ -134,8 +135,8 @@ logs,overkill,::log::/opt/proofpoint/current/var/log/cron/logformatter*
 logs,overkill,::log::/opt/proofpoint/current/var/log/cron/logpost2collector*
 logs,overkill,::log::/opt/proofpoint/current/var/log/cron/logpusher*
 logs,overkill,::log::/opt/proofpoint/current/var/log/cron/xfer*
-logs,rsyslog,overkill,::log::/var/log/pstats
-logs,rsyslog,overkill,::log::/var/log/rsyslog
+logs,rsyslog,overkill,::log::/var/log/pstats*
+logs,rsyslog,overkill,::log::/var/log/rsyslog*
 mailflow,maillog,queue,sendmail,smtp,overkill,::log::/var/log/maillog
 mailflow,procmail,system,overkill,::log::/home/support/procmaillog
 mailflow,queue,smtp,overkill,::log::/opt/proofpoint/current/var/log/queue.log
@@ -148,24 +149,27 @@ modsec,overkill,::log::/opt/proofpoint/current/var/log/httpd-enduser/modsec_audi
 network,overkill,::log::/tmp/checknet_start.log
 os,overkill,::log::/var/tmp/pps.stop.log
 os,performance,systemwatch,overkill,::log::/var/log/systemwatch
-os,plinx,overkill,::log::/root/install.log
+os,plinx,overkill,::log::/root/*.log
+os,plinx,overkill,::log::/root/install.log.syslog
+os,plinx,overkill,::log::/root/*.cfg
 os,plinx,overkill,::log::/var/log/anaconda.*
 os,plinx,overkill,::log::/var/log/dracut.log
 os,plinx,overkill,::log::/var/log/lastlog
-os,plinx,overkill,::log::/var/log/plinxmonitor.sel
+os,plinx,overkill,::log::/var/log/plinxmonitor.sel*
 os,plinx,overkill,::log::/var/log/prelink/prelink.log
-os,plinx,overkill,::log::/var/log/secure
+os,plinx,overkill,::log::/var/log/secure*
 os,plinx,overkill,::log::/var/log/tallylog
 os,plinx,overkill,::log::/var/tmp/ks-postinstall-nochroot.log
 os,plinx,overkill,::log::/var/tmp/ks-postinstall.log
 os,plinx,overkill,::log::/var/tmp/ks-preinstall.log
-os,plinx,security,overkill,::log::/var/log/sudo.log
+os,plinx,security,overkill,::log::/var/log/sudo.log*
+os,plinx,security,overkill,::log::/var/log/sudolog*
 os,update,upgrade,overkill,::log::/opt/proofpoint/current/var/log/cron/osupdate*
 overkill,::log::/opt/proofpoint/current/var/log/admind/evaluation*
 overkill,::log::/opt/proofpoint/current/var/log/appliance/pp-setup*
 overkill,::log::/opt/proofpoint/current/var/pp/install.log*
 overkill,::log::/opt/proofpoint/current/var/tmp/wizardstatus.log
-overkill,::log::/var/spool/plymouth/boot.log
+overkill,::log::/var/spool/plymouth/boot.*
 patch,overkill,::log::/opt/proofpoint/current/var/patch/patch-*/install.log*
 patch,overkill,::log::/opt/proofpoint/current/var/patch/patch-*/install.status
 patch,overkill,::log::/opt/proofpoint/current/var/patch/patch-*/process.log*
@@ -208,16 +212,17 @@ api,services,overkill,::cfg::/opt/proofpoint/current/var/httpd/apiservice/conf/*
 audit,system,overkill,::cfg::/etc/libaudit.conf
 auth,security,system,overkill,::cfg::/etc/sysconfig/authconfig
 cvs,overkill,::cfg::/opt/proofpoint/current/admin/admind/repository
-db,kernel,mysql,system,overkill,::cfg::/etc/ld.so.conf.d/mysql-x86_64.conf
+db,kernel,mariadb,mysql,system,overkill,::cfg::/etc/ld.so.conf.d/mysql-x86_64.conf
 db,logdb,logutils,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/logdb/logexport.cfg
 db,logdb,logutils,reporting,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/logdb/highvolumedata.cfg
 db,mariadb,mysql,overkill,::cfg::/opt/proofpoint/current/opt/mysql/my.cnf
 disks,hardware,overkill,::cfg::/etc/smartd.conf
+disks,hardware,overkill,::cfg::/etc/smartmontools/smartd.conf
 disks,system,overkill,::cfg::/etc/mke2fs.conf
-dns,named,network,system,overkill,::cfg::/etc/host.conf
-dns,named,network,system,overkill,::cfg::/etc/named.conf
+dns,named,network,system,overkill,::cfg::/etc/host*
+dns,named,network,system,overkill,::cfg::/etc/named*
 dns,named,network,system,overkill,::cfg::/etc/resolv.conf
-dns,named,network,system,overkill,::cfg::/etc/rndc.conf
+dns,named,network,system,overkill,::cfg::/etc/rndc.*
 dns,network,system,overkill,::cfg::/etc/nscd.conf
 emails,filter,template,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/template/*.eml
 enduser,services,overkill,::cfg::/opt/proofpoint/current/var/httpd/enduser/conf/*
@@ -226,7 +231,8 @@ filter,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/etc/
 filter,overkill,::cfg::/opt/proofpoint/current/instance/*/filter.cfg
 fsecure,overkill,::cfg::/opt/proofpoint/current/opt/fsav/fssp.conf
 fsecure,overkill,::cfg::/opt/proofpoint/current/opt/fsav/modules/fslmalerter.config
-hardware,drives,hdd,lvm,system,overkill,::cfg::/etc/lvm/lvm.conf
+hardware,drives,hdd,lvm,system,overkill,::cfg::/etc/lvm/*.conf
+hardware,drives,hdd,lvm,system,overkill,::cfg::/etc/lvm/profile/*
 hardware,events,overkill,::cfg::/etc/acpi/events/*
 hardware,sensors,system,overkill,::cfg::/etc/sensors3.conf
 httpd,modsec,overkill,::cfg::/opt/proofpoint/current/opt/httpd/conf/modsecurity_crs/*.conf
@@ -238,9 +244,13 @@ ipv6,network,system,overkill,::cfg::/etc/sysconfig/ip6tables-config
 kernel,system,overkill,::cfg::/etc/ld.so.conf.d/kernel-2.6.32-431.29.2.el6.p1.x86_64.conf
 kernel,system,overkill,::cfg::/etc/modprobe.d/*
 ldap,overkill,::cfg::/etc/mail/ldap*
+ldap,overkill,::cfg::/etc/mail/ldap.profile/*
 ldap,overkill,::cfg::/etc/openldap/ldap.conf
+ldap,overkill,::cfg::/etc/openldap/certs/*
 ldap,security,sudo,system,overkill,::cfg::/etc/sudoers
+ldap,security,sudo,system,overkill,::cfg::/etc/sudoers.pps
 log,logging,logrotate,system,overkill,::cfg::/etc/logrotate.conf
+log,logging,logrotate,system,overkill,::cfg::/etc/logrotate.conf.pps
 log,logging,os,plinx,system,overkill,::cfg::/opt/proofpoint/current/admin/etc/admind/pplog.conf
 modsec,overkill,::cfg::/opt/proofpoint/current/var/httpd/*/conf/modsecurity*
 mtools,system,overkill,::cfg::/etc/mtools.conf
@@ -248,24 +258,34 @@ network,monitor,snmp,system,overkill,::cfg::/etc/snmp/snmpd.conf
 network,monitor,snmp,system,overkill,::cfg::/etc/snmp/snmptrapd.conf
 network,system,overkill,::cfg::/etc/gai.conf
 network,system,overkill,::cfg::/etc/xinetd.conf
+network,system,overkill,::cfg::/etc/xinetd.d/*
 ntp,system,overkill,::cfg::/etc/ntp.conf
+ntp,system,overkill,::cfg::/etc/ntp/*
 os,plinx,system,overkill,::cfg::/etc/proofpoint/info.conf
+os,plinx,system,overkill,::cfg::/etc/proofpoint/mfgmodels
 os,plinx,system,overkill,::cfg::/etc/sos.conf
-overkill,::cfg::/boot/grub/grub.conf
+boot,grub,overkill,::cfg::/boot/grub/grub.conf
+boot,grub,overkill,::cfg::/boot/grub2/grub.cfg
+boot,grub,overkill,::cfg::/etc/prelink.conf.d/grub2.conf
 overkill,::cfg::/var/tmp/kickstart/*.cfg
 overkill,::cfg::/var/tmp/ks.cfg
 queue,queued,sendmail,overkill,::cfg::/opt/proofpoint/current/var/queued/*/etc/*
 rpm,system,update,upgrade,yum,overkill,::cfg::/etc/yum.conf
+rpm,system,update,upgrade,yum,overkill,::cfg::/etc/yum.conf.pps
 rpm,system,update,upgrade,yum,overkill,::cfg::/etc/yum/pluginconf.d/fastestmirror.conf
 rpm,system,update,upgrade,yum,overkill,::cfg::/etc/yum/version-groups.conf
-rsyslog,overkill,::cfg::/etc/rsyslog.conf
+rpm,system,update,upgrade,yum,overkill,::cfg::/etc/yum.repos.d/*
+rsyslog,system,overkill,::cfg::/etc/rsyslog.conf*
+rsyslog,system,overkill,::cfg::/etc/rsyslog.d/*
 saml,overkill,::cfg::/opt/proofpoint/current/opt/saml-service-provider/etc/config.properties
 saml,overkill,::cfg::/opt/proofpoint/current/opt/saml-service-provider/etc/jvm.config
 saml,overkill,::cfg::/opt/proofpoint/current/opt/saml-service-provider/etc/log.properties
 sar,system,overkill,::cfg::/etc/sysconfig/sysstat.ioconf
 security,selinux,system,overkill,::cfg::/etc/security/*.conf
-security,selinux,system,overkill,::cfg::/etc/security/*/*.conf
+security,selinux,system,overkill,::cfg::/etc/security/*/*
+security,selinux,system,overkill,::cfg::/etc/security/*.init
 security,selinux,system,overkill,::cfg::/etc/selinux/*.conf
+security,selinux,system,overkill,::cfg::/etc/selinux/config
 security,selinux,system,overkill,::cfg::/etc/sestatus.conf
 security,sudo,system,overkill,::cfg::/etc/sudo-ldap.conf
 security,sudo,system,overkill,::cfg::/etc/sudo.conf
@@ -276,24 +296,27 @@ sendmail,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/appliance/s
 sendmail,overkill,::cfg::/opt/proofpoint/current/admin/admind/deploy/appliance/sysconfig/sendmail.*
 sendmail,overkill,::cfg::/opt/proofpoint/current/appliance/templates/etc/mail/*
 sendmail,system,overkill,::cfg::/etc/sysconfig/sendmail
-ssh,system,overkill,::cfg::/etc/ssh/ssh_config
-ssh,system,overkill,::cfg::/etc/ssh/sshd_config
+ssh,system,overkill,::cfg::/etc/ssh/*
 system,overkill,::cfg::/etc/dbus-1/*.conf
 system,overkill,::cfg::/etc/dbus-1/system.d/*.conf
 system,overkill,::cfg::/etc/depmod.d/dist.conf
 system,overkill,::cfg::/etc/dracut.conf
 system,overkill,::cfg::/etc/htdig/htdig.conf
-system,overkill,::cfg::/etc/init/*.conf
+system,overkill,::cfg::/etc/init/*
 system,overkill,::cfg::/etc/krb5.conf
 system,overkill,::cfg::/etc/ld.so.conf
+system,overkill,::cfg::/etc/ld.so.cache
+system,overkill,::cfg::/etc/ld.so.conf.d/kernel*
+db,kernel,mariadb,mysql,system,overkill,::cfg::/etc/ld.so.conf.d/mariadb-x86_64.conf
 system,overkill,::cfg::/etc/ltrace.conf
 system,overkill,::cfg::/etc/man.config
+system,overkill,::cfg::/etc/man_db.conf
 system,overkill,::cfg::/etc/pki/nss-legacy/nss-rhel6.config
 system,overkill,::cfg::/etc/plymouth/plymouthd.conf
 system,overkill,::cfg::/etc/pm-utils-hd-apm-restore.conf
-system,overkill,::cfg::/etc/polkit-1/*/*.conf
+system,overkill,::cfg::/etc/polkit-1/*/*
 system,overkill,::cfg::/etc/prelink.conf
-system,overkill,::cfg::/etc/prelink.conf.d/nss-softokn-prelink.conf
+system,overkill,::cfg::/etc/prelink.conf.d/*
 system,overkill,::cfg::/etc/sysconfig/*
 system,overkill,::cfg::/etc/sysctl.conf
 system,overkill,::cfg::/etc/sysctl.d/pps_sysctl.conf
@@ -316,9 +339,9 @@ performance,status,overkill,::url::http://127.0.0.1:1235/status
 performance,timing,overkill,::url::http://127.0.0.1:1235/timing
 
 # Always gathered
-always,::log::/var/log/dmesg
-always,::log::/var/log/kernel
-always,::log::/var/log/messages
+always,::log::/var/log/dmesg*
+always,::log::/var/log/kernel*
+always,::log::/var/log/messages*
 always,::cfg::/opt/proofpoint/current/admin/admind/deploy/filter/filter.cfg
 always,::cfg::/opt/proofpoint/current/admin/admind/deploy/instance/*/filter.cfg
 always,::cmd::unbuffer df -i

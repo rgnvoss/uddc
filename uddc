@@ -29,8 +29,8 @@ from math import ceil as roundup
 # Global constants
 LNAME = "Universal Diagnostic Data Collector"
 SNAME = "uddc"
-VERSION = "2.1.4"
-BUILD = "220513.05"
+VERSION = "2.1.6"
+BUILD = "220516.01"
 SUFFIX = "Beta"
 PNAME = "\r\n" + LNAME + " (" + SNAME + ") v" + VERSION + "-" + BUILD + " " + SUFFIX
 MVER = LNAME + " v" + VERSION + "-" + BUILD + " " + SUFFIX
@@ -461,7 +461,7 @@ def main(argv):
     fileout = outpath + "/" + outfile
     
     # Fix for broken soft link
-    read_keyfile("fixit", DATA, False, False, False, True, False, False)
+    read_keyfile("fixit", datfile, False, False, False, True, False, False)
     add_cmds(cmdlines, tmpdir, False, False)
     cleanup(tmpdir + "/cmds")
 
