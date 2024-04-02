@@ -1,7 +1,4 @@
 Universal Diagnostic Data Collector (uddc)
-Formerly 'getlogs'
-
-See https://wiki.proofpoint.com/wiki/display/LRNPPS/Universal+Diagnostic+Data+Collector for additional information.
 
 Usage: uddc <OPTIONS>
 
@@ -91,8 +88,8 @@ yum
 Installation:
 
 The easiest method is to download a copy of the gzipped tar (.tgz) file,
-upload to '/opt/proofpoint/' and uncompress. This should create the
-'/opt/proofpoint/uddc/' directory. This should contain 5 files:
+upload to server and uncompress. This should create the
+'./uddc/' directory. This should contain 5 files:
 'example.dat', 'uddc', 'uddc.dat', 'uddc.sh', and 'README'. The
 output file will also be placed in this directory by default.
 
